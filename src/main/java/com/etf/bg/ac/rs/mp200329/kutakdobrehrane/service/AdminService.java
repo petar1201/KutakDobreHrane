@@ -27,10 +27,10 @@ public class AdminService {
     private final PasswordEncoder passwordEncoder;
 
 
-    private void addAdmin(){
+    public void addAdmin(String username, String password){
         Admin admin = new Admin();
-        admin.setUsername("petar");
-        admin.setPassword(passwordEncoder.encode("Miskocar1!"));
+        admin.setUsername(username);
+        admin.setPassword(passwordEncoder.encode(password));
         adminRepository.save(admin);
     }
 
@@ -43,7 +43,7 @@ public class AdminService {
         if(admin == null){
             throw new UserNotFoundException();
         }
-        if(passwordEncoder.matches(userConfirmationRequest.getPassword(), passwordEncoder.encode(userConfirmationRequest.getPassword()))){
+        if(passwordEncoder.matches(userConfirmationRequest.getPassword(), admin.getPassword())){
             userService.setUserStatus(userConfirmationRequest.getIdUser(), userStatus );
         }
         else {

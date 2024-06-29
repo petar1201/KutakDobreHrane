@@ -1,13 +1,16 @@
 package com.etf.bg.ac.rs.mp200329.kutakdobrehrane.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "\"user\"")
+@RequiredArgsConstructor
 public class User {
 
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_gen")
@@ -20,9 +23,6 @@ public class User {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "id_korisnik")
-    private Long idKorisnik;
-
     @Column(name = "security_question", nullable = false)
     private String securityQuestion;
 
@@ -31,6 +31,12 @@ public class User {
 
     @Column(name = "name", nullable = false)
     private String name;
+
+    @Column(name = "username", nullable = false, unique = true)
+    private String username;
+
+    @Column(name = "password", nullable = false)
+    private String password;
 
     @Column(name = "last_name", nullable = false)
     private String lastName;
@@ -55,6 +61,23 @@ public class User {
 
     @Column(name = "status", nullable = false, length = 50)
     private String status;
+
+    public User(String securityQuestion, String securityAnswer, String name, String username, String password, String lastName, String gender, String address, String phoneNumber, String email, byte[] profilePhoto, String cardNumber, String status, String type) {
+        this.securityQuestion = securityQuestion;
+        this.securityAnswer = securityAnswer;
+        this.name = name;
+        this.username = username;
+        this.password = password;
+        this.lastName = lastName;
+        this.gender = gender;
+        this.address = address;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
+        this.profilePhoto = profilePhoto;
+        this.cardNumber = cardNumber;
+        this.status = status;
+        this.type = type;
+    }
 
     @Column(name = "type", nullable = false, length = 50)
     private String type;

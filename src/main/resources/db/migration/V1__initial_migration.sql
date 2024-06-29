@@ -10,9 +10,10 @@ CREATE SEQUENCE IF NOT EXISTS admin_seq START WITH 1 INCREMENT BY 1;
 
 CREATE TABLE "user" (
                         id BIGINT NOT NULL,
-                        id_korisnik BIGINT,
                         security_question VARCHAR(255) NOT NULL,
                         security_answer VARCHAR(255) NOT NULL,
+                        username VARCHAR(255) UNIQUE NOT NULL,
+                        password VARCHAR(255) NOT NULL,
                         name VARCHAR(255) NOT NULL,
                         last_name VARCHAR(255) NOT NULL,
                         gender CHAR(1) CHECK(gender IN ('M', 'F')) NOT NULL,
