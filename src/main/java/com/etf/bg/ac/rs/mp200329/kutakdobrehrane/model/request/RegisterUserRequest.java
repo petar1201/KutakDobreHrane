@@ -16,6 +16,6 @@ public class RegisterUserRequest {
     private String phoneNumber;
     private String email;
     private String profilePhoto;
-    private UserType userType;
+    private UserType type;
     private String cardNumber;
 }

@@ -66,7 +66,7 @@ public class UserService {
         if(!validatePassword(registerUserRequest.getPassword())){
             throw new InvalidPasswordException();
         }
-        if(!registerUserRequest.getGender().toString().equals("Z")
+        if(!registerUserRequest.getGender().toString().equals("F")
                 && !registerUserRequest.getGender().toString().equals("M")){
             throw new InvalidGenderException();
         }
@@ -85,7 +85,7 @@ public class UserService {
                         registerUserRequest.getProfilePhoto().getBytes(),
                         registerUserRequest.getCardNumber(),
                         UserStatus.WAITING.name(),
-                        registerUserRequest.getUserType().name()
+                        registerUserRequest.getType().name()
                 )
         );
     }
