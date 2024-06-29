@@ -1,9 +1,6 @@
 package com.etf.bg.ac.rs.mp200329.kutakdobrehrane.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,6 +9,13 @@ import lombok.Setter;
 @Entity
 @Table(name = "\"user\"")
 public class User {
+
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_gen")
+    @SequenceGenerator(
+            name = "user_gen",
+            sequenceName = "user_seq",
+            allocationSize = 1
+    )
     @Id
     @Column(name = "id", nullable = false)
     private Long id;
