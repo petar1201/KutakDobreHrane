@@ -1,0 +1,54 @@
+<div class="user-details-container">
+    <button class="back-button" (click)="goBack()">Go Back</button>
+    <h2 class="details-header">Restaurant Details</h2>
+    <div class="user-details">
+        <div class="detail-item">
+            <label>Id:</label>
+            <span *ngIf="!editMode">{{ restaurant.id }}</span>
+            <input type="text" class="edit-input" *ngIf="editMode" [(ngModel)]="restaurant.id">
+          </div>
+      <div class="detail-item">
+        <label>Name:</label>
+        <span *ngIf="!editMode">{{ restaurant.name }}</span>
+        <input type="text" class="edit-input" *ngIf="editMode" [(ngModel)]="restaurant.name">
+      </div>
+      <div class="detail-item">
+        <label>Address:</label>
+        <span *ngIf="!editMode">{{ restaurant.address }}</span>
+        <input type="text" class="edit-input" *ngIf="editMode" [(ngModel)]="restaurant.address">
+      </div>
+      <div class="detail-item">
+        <label>Contact Person:</label>
+        <span *ngIf="!editMode">{{ restaurant.contactPerson }}</span>
+        <input type="text" class="edit-input" *ngIf="editMode" [(ngModel)]="restaurant.contactPerson">
+      </div>
+      <div class="detail-item">
+        <label>Type:</label>
+        <span *ngIf="!editMode">{{ restaurant.type }}</span>
+        <input type="text" class="edit-input" *ngIf="editMode" [(ngModel)]="restaurant.type">
+      </div>
+      <div class="detail-item">
+        <label>Working Hours:</label>
+        <span *ngIf="!editMode">{{ restaurant.workingHours }}</span>
+        <input type="text" class="edit-input" *ngIf="editMode" [(ngModel)]="restaurant.workingHours">
+      </div>
+      <div class="detail-item">
+        <label>Description:</label>
+        <span *ngIf="!editMode">{{ restaurant.description }}</span>
+        <input type="text" class="edit-input" *ngIf="editMode" [(ngModel)]="restaurant.description">
+      </div>
+      <div class="detail-item">
+        <label>Restaurant Layout:</label>
+        <span *ngIf="!editMode">{{ restaurant.restaurantLayout }}</span>
+        <input type="text" class="edit-input" *ngIf="editMode" [(ngModel)]="restaurant.restaurantLayout">
+      </div>
+    </div>
+    <div class="button-container" *ngIf="!editMode">
+      <button class="edit-button" (click)="toggleEditMode()">Edit</button>
+    </div>
+    <div class="button-container" *ngIf="editMode">
+      <button class="save-button" (click)="saveChanges()">Save</button>
+      <button class="cancel-button" (click)="cancelEdit()">Cancel</button>
+    </div>
+  </div>
+  

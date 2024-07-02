@@ -1,0 +1,49 @@
+<app-waiter-top-bar></app-waiter-top-bar>
+<div class="user-details-container" style="margin-top: 20px;">
+    <h2 class="details-header">{{ user.username }}</h2>
+    <div style="text-align: center;">
+      <img [src]="user.profilePhoto">
+    </div>
+    <div class="user-details">
+      <div class="detail-item">
+        <label>Email:</label>
+        <span *ngIf="!editMode">{{ user.email }}</span>
+        <input type="email" class="edit-input" *ngIf="editMode" [(ngModel)]="user.email">
+      </div>
+      <div class="detail-item">
+        <label>Name:</label>
+        <span *ngIf="!editMode">{{ user.name }}</span>
+        <input type="text" class="edit-input" *ngIf="editMode" [(ngModel)]="user.name">
+      </div>
+      <div class="detail-item">
+        <label>Last Name:</label>
+        <span *ngIf="!editMode">{{ user.lastName }}</span>
+        <input type="text" class="edit-input" *ngIf="editMode" [(ngModel)]="user.lastName">
+      </div>
+      <div class="detail-item">
+        <label>Address:</label>
+        <span *ngIf="!editMode">{{ user.address }}</span>
+        <input type="text" class="edit-input" *ngIf="editMode" [(ngModel)]="user.address">
+      </div>
+      <div class="detail-item">
+        <label>Phone Number:</label>
+        <span *ngIf="!editMode">{{ user.phoneNumber }}</span>
+        <input type="text" class="edit-input" *ngIf="editMode" [(ngModel)]="user.phoneNumber">
+      </div>
+      <div class="detail-item">
+        <label>Card Number:</label>
+        <span *ngIf="!editMode">{{ user.cardNumber }}</span>
+        <input type="text" class="edit-input" *ngIf="editMode" [(ngModel)]="user.cardNumber">
+      </div>
+      <input type="file" id="profilePicture" *ngIf="editMode" (change)="onFileChange($event)" accept="image/jpeg, image/png" required>
+
+    </div>
+    <div class="button-container" *ngIf="!editMode">
+      <button class="edit-button" (click)="toggleEditMode()">Edit</button>
+    </div>
+    <div class="button-container" *ngIf="editMode">
+      <button class="save-button" (click)="saveChanges()">Save</button>
+      <button class="cancel-button" (click)="cancelEdit()">Cancel</button>
+    </div>
+  </div>
+  

@@ -17,4 +17,6 @@ export class User {
     email: String;
     profilePhoto: String;
     cardNumber: String;
+    idRes:Number = null;
+    
 }

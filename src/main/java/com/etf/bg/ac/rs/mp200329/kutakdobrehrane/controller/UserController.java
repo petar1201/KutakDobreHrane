@@ -1,22 +1,26 @@
 package com.etf.bg.ac.rs.mp200329.kutakdobrehrane.controller;
 
+import com.etf.bg.ac.rs.mp200329.kutakdobrehrane.entity.Restaurant;
 import com.etf.bg.ac.rs.mp200329.kutakdobrehrane.entity.User;
+import com.etf.bg.ac.rs.mp200329.kutakdobrehrane.entity.WaiterRestaurant;
 import com.etf.bg.ac.rs.mp200329.kutakdobrehrane.exception.InactiveUserException;
 import com.etf.bg.ac.rs.mp200329.kutakdobrehrane.exception.InvalidGenderException;
 import com.etf.bg.ac.rs.mp200329.kutakdobrehrane.exception.InvalidPasswordException;
 import com.etf.bg.ac.rs.mp200329.kutakdobrehrane.exception.UserNotFoundException;
+import com.etf.bg.ac.rs.mp200329.kutakdobrehrane.model.dto.RestaurantsDTO;
 import com.etf.bg.ac.rs.mp200329.kutakdobrehrane.model.request.ChangePasswordRequest;
 import com.etf.bg.ac.rs.mp200329.kutakdobrehrane.model.request.LoginRequest;
 import com.etf.bg.ac.rs.mp200329.kutakdobrehrane.model.request.RegisterUserRequest;
+import com.etf.bg.ac.rs.mp200329.kutakdobrehrane.service.RestaurantService;
 import com.etf.bg.ac.rs.mp200329.kutakdobrehrane.service.UserService;
+import com.etf.bg.ac.rs.mp200329.kutakdobrehrane.service.WaiterRestaurantService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,7 +28,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
     private final UserService userService;
-
+    private final RestaurantService restaurantService;
+    private final WaiterRestaurantService waiterRestaurantService;
 
     @PostMapping("login")
     public ResponseEntity<User> login(
@@ -83,5 +88,59 @@ public class UserController {
         }
     }
 
+
+    @GetMapping("all")
+    public List<User> getAll(){
+        return userService.getAll();
+    }
+
+    @PostMapping("/update")
+    public ResponseEntity<User> update(
+            @RequestBody User user,
+            @RequestHeader(required = false) Long idRes
+    ){
+        try {
+            User retUser = userService.update(user);
+            if(idRes != null){
+                Restaurant restaurant = restaurantService.findById(idRes);
+                if(restaurant != null) {
+                    waiterRestaurantService.addDependency(retUser, restaurant);
+                }
+            }
+            return new ResponseEntity<>(userService.update(user), HttpStatus.OK);
+        }
+        catch (Exception e){
+            return new ResponseEntity<>(HttpStatusCode.valueOf(312));
+        }
+    }
+
+    @GetMapping("/restaurant/{idUser}")
+    public ResponseEntity<Long> getRestaurant(
+            @PathVariable Long idUser
+    ){
+        try {
+            User user = userService.findById(idUser);
+            return new ResponseEntity<>(waiterRestaurantService.getByUser(user), HttpStatus.OK);
+        } catch (UserNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.valueOf(302));
+        }
+    }
+
+    @GetMapping("/restaurant/details/{idUser}")
+    public ResponseEntity<RestaurantsDTO> getRestaurantDetails(
+            @PathVariable Long idUser
+    ){
+        try {
+            User user = userService.findById(idUser);
+            return new ResponseEntity<>(restaurantService.toDto(restaurantService.findById(waiterRestaurantService.getByUser(user))), HttpStatus.OK);
+        } catch (UserNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.valueOf(302));
+        }
+    }
+
+    @GetMapping("/count/registered")
+    public long countRegistered(){
+        return userService.countRegistered();
+    }
 
 }

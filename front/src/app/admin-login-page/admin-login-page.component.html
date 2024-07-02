@@ -1,0 +1,10 @@
+<div class="admin-login-container">
+    <h2 class="login-header">Admin Login</h2>
+    <div class="login-form">
+      <input type="text" placeholder="Username" class="text-input" [(ngModel)]="username">
+      <input type="password" placeholder="Password" class="text-input" [(ngModel)]="password">
+      <button (click)="login()" class="login-button">Login</button>
+      <div *ngIf="loginPorukaGreske" class="error-message">{{loginPorukaGreske}}</div>
+    </div>
+  </div>
+  

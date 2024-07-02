@@ -37,8 +37,10 @@
             <input type="text" placeholder="Address" class="text-input" [(ngModel)]="address">
             <input type="tel" placeholder="Phone Number" class="text-input" [(ngModel)]="phoneNumber">
             <input type="email" placeholder="Email" class="text-input" [(ngModel)]="email">
-            <input type="text" placeholder="Profile Photo" class="text-input" [(ngModel)]="profilePhoto">
             <input type="text" placeholder="Card Number" class="text-input" [(ngModel)]="cardNumber">
+            <label for="profilePicture">Profile Picture:</label>
+            <input type="file" id="profilePicture" (change)="onFileChange($event)" accept="image/jpeg, image/png" required>
+  
             <button (click)="registerUser()" class="register-button">Register</button>
             <a class="forgot-password" style="color: brown; font-size: 15px;">{{registerPorukaGreske}}</a>
         </div>

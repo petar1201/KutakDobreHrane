@@ -3,6 +3,7 @@ plugins {
 	id("org.springframework.boot") version "3.3.0"
 	id("io.spring.dependency-management") version "1.1.5"
 	id("org.flywaydb.flyway") version "9.16.3"
+    kotlin("jvm")
 
 }
 
@@ -38,6 +39,7 @@ dependencies {
 	annotationProcessor("org.projectlombok:lombok")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    implementation(kotlin("stdlib-jdk8"))
 }
 
 tasks.withType<Test> {
@@ -48,5 +50,5 @@ flyway {
 	url = "jdbc:postgresql://localhost:5430/kutak_dobre_hrane"
 	user = "postgres"
 	password = "pass123"
-	cleanDisabled = false
+	cleanDisabled = true
 }

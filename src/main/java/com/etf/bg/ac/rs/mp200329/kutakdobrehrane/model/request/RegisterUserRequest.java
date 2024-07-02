@@ -18,4 +18,5 @@ public class RegisterUserRequest {
     private String profilePhoto;
     private UserType type;
     private String cardNumber;
+    private Long idRes = null;
 }

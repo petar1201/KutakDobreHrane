@@ -1,0 +1,1 @@
+alter table "reservation" add column num_of_people int null;

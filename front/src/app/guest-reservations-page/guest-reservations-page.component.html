@@ -1,0 +1,54 @@
+<app-guest-top-bar></app-guest-top-bar>
+
+<div class="guest-reservations-container">
+  
+    <h2>Reservations</h2>
+  
+    <div class="reservation-section">
+      <h3>Active Reservations</h3>
+      <table class="reservation-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Restaurant Name</th>
+            <th>Restaurant Address</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let reservation of archive.active">
+            <td>{{ formatDate(reservation.dateTime) }}</td>
+            <td>{{ reservation.restaurantName }}</td>
+            <td>{{ reservation.restaurantAddress }}</td>
+          </tr>
+          <tr *ngIf="!archive.active || archive.active.length === 0">
+            <td colspan="3" class="no-data">No active reservations found.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  
+    <div class="reservation-section">
+      <h3>Expired Reservations</h3>
+      <table class="reservation-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Restaurant Name</th>
+            <th>Restaurant Address</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let reservation of archive.expired">
+            <td>&nbsp;</td>
+            <td>{{ reservation.restaurantName }}</td>
+            <td>{{ reservation.restaurantAddress }}</td>
+          </tr>
+          <tr *ngIf="!archive.expired || archive.expired.length === 0">
+            <td colspan="3" class="no-data">No expired reservations found.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  
+  </div>
+  

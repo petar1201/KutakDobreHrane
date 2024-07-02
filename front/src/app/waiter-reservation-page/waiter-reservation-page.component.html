@@ -1,0 +1,31 @@
+<app-waiter-top-bar></app-waiter-top-bar>
+<div class="guest-reservations-container">
+  
+    <h2>Reservations</h2>
+  
+    <div class="reservation-section">
+      <h3>Active Reservations</h3>
+      <table class="reservation-table">
+        <thead>
+          <tr>
+            <th>Restaurant Name</th>
+            <th>Date</th>
+            <th>Persons</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let reservation of reservations">
+            <td>{{ reservation.restaurantName }}</td>
+            <td>{{ formatDate(reservation.dateTime) }}</td>
+            <td>{{ reservation.numOfPeopple }}</td>
+          </tr>
+          <tr *ngIf="reservations.length === 0">
+            <td colspan="3" class="no-data">No reservations found.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  
+  
+  </div>
+  

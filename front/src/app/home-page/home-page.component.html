@@ -1,3 +1,31 @@
 <div>
     <app-top-bar></app-top-bar>
+    <div *ngIf="shouldShow()">
+      <div class="summary-section">
+        <h2>Summary</h2>
+        <div class="summary-item">
+          <span class="summary-title">Total Restaurants:</span>
+          <span class="summary-value">{{ countRestaurants }}</span>
+        </div>
+        <div class="summary-item">
+          <span class="summary-title">Total Registered Users:</span>
+          <span class="summary-value">{{ countRegisteredUsers }}</span>
+        </div>
+        <div class="summary-item">
+          <span class="summary-title">Reservations Last Day:</span>
+          <span class="summary-value">{{ lastDay }}</span>
+        </div>
+        <div class="summary-item">
+          <span class="summary-title">Reservations Last Week:</span>
+          <span class="summary-value">{{ lastWeek }}</span>
+        </div>
+        <div class="summary-item">
+          <span class="summary-title">Reservations Last Month:</span>
+          <span class="summary-value">{{ lastMonth }}</span>
+        </div>
+    </div>
+    <app-restaurant-list></app-restaurant-list>
+
+    </div>
+
 </div>

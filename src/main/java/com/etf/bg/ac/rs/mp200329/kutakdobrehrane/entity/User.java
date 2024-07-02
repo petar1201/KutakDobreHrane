@@ -54,7 +54,7 @@ public class User {
     private String email;
 
     @Column(name = "profile_photo")
-    private byte[] profilePhoto;
+    private String profilePhoto;
 
     @Column(name = "card_number", nullable = false)
     private String cardNumber;
@@ -62,7 +62,7 @@ public class User {
     @Column(name = "status", nullable = false, length = 50)
     private String status;
 
-    public User(String securityQuestion, String securityAnswer, String name, String username, String password, String lastName, String gender, String address, String phoneNumber, String email, byte[] profilePhoto, String cardNumber, String status, String type) {
+    public User(String securityQuestion, String securityAnswer, String name, String username, String password, String lastName, String gender, String address, String phoneNumber, String email, String profilePhoto, String cardNumber, String status, String type) {
         this.securityQuestion = securityQuestion;
         this.securityAnswer = securityAnswer;
         this.name = name;

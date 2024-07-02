@@ -1,0 +1,12 @@
+<h2 mat-dialog-title>Select Delivery Time</h2>
+<div mat-dialog-content>
+  <mat-radio-group [(ngModel)]="selectedTime">
+    <mat-radio-button value="20-30">20-30 minutes</mat-radio-button>
+    <mat-radio-button value="30-40">30-40 minutes</mat-radio-button>
+    <mat-radio-button value="40-50">40-50 minutes</mat-radio-button>
+  </mat-radio-group>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Cancel</button>
+  <button mat-button [mat-dialog-close]="selectedTime">Accept</button>
+</div>

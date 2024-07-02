@@ -1,0 +1,37 @@
+<div class="restaurant-container">
+  <div class="filter-container">
+    <input style="margin-right:10px;" type="text" placeholder="Search by name" class="text-input" [(ngModel)]="searchName">
+    <input style="margin-right:10px;" type="text" placeholder="Search by address" class="text-input" [(ngModel)]="searchAddress">
+    <select style="margin-right:10px;" class="text-input" [(ngModel)]="searchType">
+      <option value="">Select type</option>
+      <option *ngFor="let type of restaurantTypes" [value]="type">{{ type }}</option>
+    </select>
+    <select style="margin-right:10px;" class="text-input" [(ngModel)]="sortColumn" (change)="sort()">
+      <option value="">Sort by</option>
+      <option value="name">Name</option>
+      <option value="address">Address</option>
+      <option value="type">Type</option>
+    </select>
+    <select style="margin-right:10px;" class="text-input" [(ngModel)]="sortOrder" (change)="sort()">
+      <option value="asc">Ascending</option>
+      <option value="desc">Descending</option>
+    </select>
+    <button (click)="search()" class="search-button">Search</button>
+  </div>
+
+  <div class="restaurant-list">
+    <div class="restaurant-header">
+      <span class="restaurant-info ">Name</span>
+      <span class="restaurant-info ">Address</span>
+      <span class="restaurant-info ">Type</span>
+      <span class="restaurant-info">Waiters</span>
+    </div>
+    <div *ngFor="let restaurant of restaurants" class="restaurant-item">
+      <span class="restaurant-info" *ngIf="!flag">{{ restaurant.name }}</span>
+      <span *ngIf="flag" class="restaurant-info clickable-link" (click)="onRestaurantClick(restaurant)">{{ restaurant.name }}</span>
+      <span class="restaurant-info">{{ restaurant.address }}</span>
+      <span class="restaurant-info">{{ restaurant.type }}</span>
+      <span class="restaurant-info">{{ restaurant.waiters }}</span>
+    </div>
+  </div>
+</div>

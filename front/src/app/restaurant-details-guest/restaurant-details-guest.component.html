@@ -1,0 +1,87 @@
+<div class="user-details-container">
+  <button class="back-button" (click)="goBack()">Go Back</button>
+  <h2 class="details-header">Restaurant Details</h2>
+  <div class="user-details">
+    <div class="detail-item">
+      <label>Name:</label>
+      <span *ngIf="!editMode">{{ restaurant.name }}</span>
+      <input type="text" class="edit-input" *ngIf="editMode" [(ngModel)]="restaurant.name">
+    </div>
+    <div class="detail-item">
+      <label>Address:</label>
+      <span *ngIf="!editMode">{{ restaurant.address }}</span>
+      <input type="text" class="edit-input" *ngIf="editMode" [(ngModel)]="restaurant.address">
+    </div>
+    <div class="detail-item">
+      <label>Contact Person:</label>
+      <span *ngIf="!editMode">{{ restaurant.contactPerson }}</span>
+      <input type="text" class="edit-input" *ngIf="editMode" [(ngModel)]="restaurant.contactPerson">
+    </div>
+    <div class="detail-item">
+      <label>Type:</label>
+      <span *ngIf="!editMode">{{ restaurant.type }}</span>
+      <input type="text" class="edit-input" *ngIf="editMode" [(ngModel)]="restaurant.type">
+    </div>
+    <div class="detail-item">
+      <label>Working Hours:</label>
+      <span *ngIf="!editMode">{{ restaurant.workingHours }}</span>
+      <input type="text" class="edit-input" *ngIf="editMode" [(ngModel)]="restaurant.workingHours">
+    </div>
+  </div>
+
+  <div class="reservation-form" *ngIf="!editMode">
+    <!-- Your existing reservation form -->
+    <h3>Make a Reservation</h3>
+    <form (ngSubmit)="makeReservation()">
+      <div class="form-item">
+        <label for="reservation-date">Date:</label>
+        <input type="datetime-local" id="reservation-date" [(ngModel)]="reservationDate" name="reservationDate" required>
+      </div>
+      <div class="form-item">
+        <label for="number-of-people">Number of People:</label>
+        <input type="number" id="number-of-people" [(ngModel)]="numberOfPeople" name="numberOfPeople" min="1" required>
+      </div>
+      <div class="form-item">
+        <label for="additional-requests">Additional Requests:</label>
+        <textarea id="additional-requests" [(ngModel)]="additionalRequests" name="additionalRequests"></textarea>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="submit-button">Reserve</button>
+      </div>
+    </form>
+    <div *ngIf="reservationMessage" class="reservation-message">
+      {{ reservationMessage }}
+    </div>
+  </div>
+
+  <button class="show-menu-button" (click)="toggleMenu()">Show Menu</button>
+
+  <div class="menu-list" *ngIf="showMenu && menu">
+    <h3>Menu</h3>
+    <div class="food-item" *ngFor="let food of menu">
+      <!-- Replace 'food.image' with the actual image property once available -->
+      <img [src]="food.photo" alt="Food Image">
+      <div class="food-details">
+        <h4>{{ food.name }}</h4>
+        <p>Price: {{ food.price }}</p>
+        <p>Ingredients: {{ food.ingredients }}</p>
+        <div class="add-to-cart">
+          <input type="number" [(ngModel)]="food.quantity" min="1" placeholder="Quantity">
+          <button class="add-to-cart-button" (click)="addToCart(food)">Add to Cart</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <button class="show-menu-button" (click)="toggleCart()">Show Cart</button>
+
+  <div class="cart-list" *ngIf="showCart && cart.length > 0">
+    <!-- Cart items -->
+    <h3>Cart</h3>
+    <div class="cart-item" *ngFor="let item of cart">
+      <p>{{ item.food.name }} - Quantity: {{ item.quantity }}</p>
+    </div>
+    <button class="finish-button" (click)="finishOrder()">Finish</button>
+  </div>
+
+</div>

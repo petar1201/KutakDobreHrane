@@ -1,0 +1,1 @@
+ALTER table "table_usage" add column datum date;

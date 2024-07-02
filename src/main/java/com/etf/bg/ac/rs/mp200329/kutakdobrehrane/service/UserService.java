@@ -1,10 +1,8 @@
 package com.etf.bg.ac.rs.mp200329.kutakdobrehrane.service;
 
+import com.etf.bg.ac.rs.mp200329.kutakdobrehrane.entity.Restaurant;
 import com.etf.bg.ac.rs.mp200329.kutakdobrehrane.entity.User;
-import com.etf.bg.ac.rs.mp200329.kutakdobrehrane.exception.InactiveUserException;
-import com.etf.bg.ac.rs.mp200329.kutakdobrehrane.exception.InvalidGenderException;
-import com.etf.bg.ac.rs.mp200329.kutakdobrehrane.exception.InvalidPasswordException;
-import com.etf.bg.ac.rs.mp200329.kutakdobrehrane.exception.UserNotFoundException;
+import com.etf.bg.ac.rs.mp200329.kutakdobrehrane.exception.*;
 import com.etf.bg.ac.rs.mp200329.kutakdobrehrane.model.enums.UserStatus;
 import com.etf.bg.ac.rs.mp200329.kutakdobrehrane.model.request.ChangePasswordRequest;
 import com.etf.bg.ac.rs.mp200329.kutakdobrehrane.model.request.LoginRequest;
@@ -15,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -26,6 +25,10 @@ public class UserService {
     private final UserRepository userRepository;
 
     private final PasswordEncoder passwordEncoder;
+
+    private final WaiterRestaurantService waiterRestaurantService;
+
+    private final RestaurantService restaurantService;
 
     static String PASSWORD_PATTERN = "^(?=.*[A-Z])(?=.*[a-z]{3})(?=.*[0-9])(?=.*[!@#$%^&*()])(?=.{6,10})[a-zA-Z].*$";
 
@@ -62,7 +65,7 @@ public class UserService {
         }
     }
 
-    public User register(RegisterUserRequest registerUserRequest) throws InvalidPasswordException, InvalidGenderException {
+    public User register(RegisterUserRequest registerUserRequest) throws InvalidPasswordException, InvalidGenderException, UserNotFoundException, RestaurantNotFoundException {
         if(!validatePassword(registerUserRequest.getPassword())){
             throw new InvalidPasswordException();
         }
@@ -70,7 +73,7 @@ public class UserService {
                 && !registerUserRequest.getGender().toString().equals("M")){
             throw new InvalidGenderException();
         }
-        return userRepository.save(
+        User retUser = userRepository.save(
                 new User(
                         registerUserRequest.getSecurityQuestion(),
                         registerUserRequest.getSecurityAnswer(),
@@ -82,12 +85,17 @@ public class UserService {
                         registerUserRequest.getAddress(),
                         registerUserRequest.getPhoneNumber(),
                         registerUserRequest.getEmail(),
-                        registerUserRequest.getProfilePhoto().getBytes(),
+                        registerUserRequest.getProfilePhoto(),
                         registerUserRequest.getCardNumber(),
                         UserStatus.WAITING.name(),
                         registerUserRequest.getType().name()
                 )
         );
+
+        if(registerUserRequest.getIdRes() != null){
+            waiterRestaurantService.addDependency(retUser, restaurantService.findById(registerUserRequest.getIdRes()));
+        }
+        return retUser;
     }
 
 
@@ -105,6 +113,39 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(changePasswordRequest.getNewPassword()));
         userRepository.save(user);
 
+    }
+
+    public List<User> getAll(){
+        return userRepository.findAll();
+    }
+
+    public User update(User user) throws Exception {
+        if (user.getPassword().contains("$")){
+            return userRepository.save(user);
+        }
+        else{
+            if(validatePassword(user.getPassword())){
+                user.setPassword(passwordEncoder.encode(user.getPassword()));
+                return userRepository.save(user);
+            }
+            else {
+                throw new Exception();
+            }
+        }
+    }
+
+    public User findById(Long id){
+        return userRepository.findById(id).isPresent() ? userRepository.findById(id).get() : null;
+    }
+
+    public long countRegistered(){
+        return userRepository.countAllByStatusEquals(UserStatus.ACTIVE.name());
+    }
+
+    public void updateMikipromax(){
+        User miki = findById(3L);
+        miki.setPassword(passwordEncoder.encode("Miskocar1!"));
+        userRepository.save(miki);
     }
 
 }

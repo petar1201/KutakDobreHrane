@@ -1,0 +1,36 @@
+<app-waiter-top-bar></app-waiter-top-bar>
+
+
+<div class="guest-reservations-container">
+  
+  <h2>Deliveries</h2>
+
+  <div class="reservation-section">
+    <h3>Pending Deliveries</h3>
+    <table class="reservation-table">
+      <thead>
+        <tr>
+          <th>Restaurant Name</th>
+          <th>Cart</th>
+          <th>Accept</th>
+          <th>Refuse</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let delivery of deliveries">
+          <td>{{ delivery.restaurantName }}</td>
+          <td>{{ delivery.cart }}</td>
+          <td><button (click)="accept(delivery)" class="accept-button">Accept</button></td>
+          <td><button (click)="refuse(delivery)" class="refuse-button">Refuse</button></td>
+        </tr>
+        <tr *ngIf="!isThereAnyActive()">
+          <td colspan="4" class="no-data">No deliveries found.</td>
+        </tr>        
+      </tbody>
+    </table>
+  </div>
+
+
+
+
+</div>

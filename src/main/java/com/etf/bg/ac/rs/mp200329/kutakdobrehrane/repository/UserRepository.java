@@ -7,4 +7,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     public User findUserByUsernameEquals(String username);
 
+    public Long countAllByStatusEquals(String status);
+
 }

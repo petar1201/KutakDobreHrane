@@ -1,0 +1,63 @@
+<app-guest-top-bar></app-guest-top-bar>
+
+
+<div class="guest-reservations-container">
+  
+  <h2>Reservations</h2>
+
+  <div class="reservation-section">
+    <h3>Active Deliveries</h3>
+    <table class="reservation-table">
+      <thead>
+        <tr>
+          <th>Restaurant Name</th>
+          <th>Cart</th>
+          <th>Status</th>
+          <th>Expected Arrival</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let delivery of deliveries">
+          <td *ngIf="isActiveDelivery(delivery)">{{ delivery.restaurantName }}</td>
+          <td *ngIf="isActiveDelivery(delivery)">{{ delivery.cart }}</td>
+          <td *ngIf="isActiveDelivery(delivery)">{{ delivery.status }}</td>
+          <td *ngIf="isActiveDelivery(delivery)">{{ getExpectedArrival(delivery) }}</td>
+        </tr>
+        <tr *ngIf="!isThereAnyActive()">
+          <td colspan="4" class="no-data">No active deliveries found.</td>
+        </tr>        
+      </tbody>
+    </table>
+  </div>
+
+    
+  <div class="reservation-section">
+    <h3>Delivered Deliveries</h3>
+    <table class="reservation-table">
+      <thead>
+        <tr>
+          <th>Restaurant Name</th>
+          <th>Cart</th>
+
+          <th>Status</th>
+          <th>Delivery Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let delivery of deliveries">
+          <td *ngIf="isDeliveredDelivery(delivery)">{{ delivery.restaurantName }}</td>
+          <td *ngIf="isDeliveredDelivery(delivery)">{{ delivery.cart }}</td>
+
+          <td *ngIf="isDeliveredDelivery(delivery)">{{ delivery.status }}</td>
+          <td *ngIf="isDeliveredDelivery(delivery)">{{ formatDateTime(delivery.dateTime) }}</td>
+        </tr>
+        <tr *ngIf="!isThereAnyDelivered()">
+          <td colspan="4" class="no-data">No delivred deliveries found.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+
+
+</div>

@@ -6,7 +6,6 @@ import lombok.Data;
 public class UserConfirmationRequest {
 
     private long idAdmin;
-    private String password;
     private long idUser;
 
 }

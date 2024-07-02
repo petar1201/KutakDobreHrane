@@ -1,0 +1,110 @@
+<div class="midd">
+  <button class="logout-button" (click)="logout()">Logout</button>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <button class="logout-button " (click)="addWaiter()">Add Waiter</button>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <button class="logout-button " (click)="addRestaurant()">Add Restaurant</button>
+</div>
+
+<div class="registration-container" *ngIf="registerFlag==true">
+  <h2 class="registration-header">Register</h2>
+  <div class="registration-form">
+      <input type="text" placeholder="Username" class="text-input" [(ngModel)]="username">
+      <input type="password" placeholder="Password" class="text-input" [(ngModel)]="password">
+      <input type="text" placeholder="Security Question" class="text-input" [(ngModel)]="securityQuestion">
+      <input type="text" placeholder="Security Answer" class="text-input" [(ngModel)]="securityAnswer">
+      <input type="text" placeholder="First Name" class="text-input" [(ngModel)]="firstName">
+      <input type="text" placeholder="Last Name" class="text-input" [(ngModel)]="lastName">
+      <div class="gender-checkbox">
+          <select name="genderr" id="genderr" [(ngModel)]="gender">
+              <option value="">Select Gender</option>
+              <option value="M">Male</option>
+              <option value="F">Female</option>
+          </select>
+      </div>
+      <input type="text" placeholder="Address" class="text-input" [(ngModel)]="address">
+      <input type="tel" placeholder="Phone Number" class="text-input" [(ngModel)]="phoneNumber">
+      <input type="email" placeholder="Email" class="text-input" [(ngModel)]="email">
+      <input type="text" placeholder="Card Number" class="text-input" [(ngModel)]="cardNumber">
+      <input type="text" placeholder="Restaurant Id" class="text-input" [(ngModel)]="idRes">
+      <input type="file" id="profilePicture" (change)="onFileChange($event)" accept="image/jpeg, image/png" required>
+
+      <button (click)="registerUser()" class="register-button">Register</button>
+      <a class="forgot-password" style="color: brown; font-size: 15px;">{{registerPorukaGreske}}</a>
+  </div>
+</div>
+
+<div class="registration-container" *ngIf="restaurantFlag==true">
+  <h2 class="registration-header">Create Restaurant</h2>
+  <div class="registration-form">
+      <input type="text" placeholder="Name" class="text-input" [(ngModel)]="rName">
+      <input type="text" placeholder="Address" class="text-input" [(ngModel)]="rAddress">
+      <input type="text" placeholder="Description" class="text-input" [(ngModel)]="rDescription">
+      <input type="text" placeholder="Contact Person" class="text-input" [(ngModel)]="rContactPerson">
+      <div class="gender-checkbox">
+          <select name="rType_" id="rType_" [(ngModel)]="rType">
+              <option value="">Select type</option>
+              <option value="SERBIAN">Serbian</option>
+              <option value="ITALIAN">Italian</option>
+              <option value="CHINESE">Chinese</option>
+              <option value="JAPANESE">Japanese</option>
+              <option value="THAI">Thai</option>
+              <option value="INDIAN">Indian</option>
+          </select>
+      </div>
+      <input type="text" placeholder="Restaurant Layout" class="text-input" [(ngModel)]="rRestaurantLayout">
+      <button (click)="createRestaurant()" class="register-button">Create</button>
+      <a class="forgot-password" style="color: brown; font-size: 15px;">{{restaurantPorukaGreske}}</a>
+  </div>
+</div>
+
+<div class="admin-page-container">
+
+    <div class="user-list">
+
+      <div class="user-header">
+        <span class="user-info">Username</span>
+        <span class="user-info">Email</span>
+        <span class="user-info">Name</span>
+        <span class="user-info">Last Name</span>
+        <span class="user-info">Type</span>
+        <span class="user-info">Status</span>
+        <span class="user-actions">Actions</span>
+      </div>
+      <div *ngFor="let user of users" class="user-item" [ngClass]="{'waiting-status': user.status === 'WAITING', 'refused-status': user.status === 'REFUSED'}">
+        <span class="user-info">{{ user.username }}</span>
+        <span class="user-info">{{ user.email }}</span>
+        <span class="user-info">{{ user.name }}</span>
+        <span class="user-info">{{ user.lastName }}</span>
+        <span class="user-info">{{ user.type }}</span>
+        <span class="user-info">{{ user.status }}</span>
+        <div class="user-actions">
+          <button (click)="showDetails(user)" class="action-button">Show Details</button>
+          <button (click)="activateUser(user)" class="action-button">Activate</button>
+          <button (click)="deactivateUser(user)" class="action-button">Deactivate</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="user-list">
+
+      <div class="user-header res-header">
+        <span class="user-info">Name</span>
+        <span class="user-info">Address</span>
+        <span class="user-info">Contact Person</span>
+        <span class="user-info">Working Hours</span>
+        <span class="user-info">Type</span>
+      </div>
+      <div *ngFor="let restaurant of restaurants" class="user-item">
+        <span class="user-info">{{ restaurant.name }}</span>
+        <span class="user-info">{{ restaurant.address }}</span>
+        <span class="user-info">{{ restaurant.contactPerson }}</span>
+        <span class="user-info">{{ restaurant.workingHours }}</span>
+        <span class="user-info">{{ restaurant.type }}</span>
+        <div class="user-actions">
+          <button (click)="showRestaurantDetails(restaurant)" class="action-button">Show Details</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  

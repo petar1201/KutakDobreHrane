@@ -1,0 +1,92 @@
+<div class="user-details-container">
+  <button class="back-button" (click)="goBack()">Go Back</button>
+  <h2 class="details-header">User Details</h2>
+  <div class="user-details">
+    <div class="detail-item">
+      <label>Id:</label>
+      <span *ngIf="!editMode">{{ user.id }}</span>
+      <input type="text" class="edit-input" *ngIf="editMode" [(ngModel)]="user.id">
+    </div>
+    <div class="detail-item">
+      <label>Username:</label>
+      <span *ngIf="!editMode">{{ user.username }}</span>
+      <input type="text" class="edit-input" *ngIf="editMode" [(ngModel)]="user.username">
+    </div>
+    <div style="text-align: center;">
+      <img [src]="user.profilePhoto">
+    </div>
+    <div class="detail-item">
+      <label>Email:</label>
+      <span *ngIf="!editMode">{{ user.email }}</span>
+      <input type="email" class="edit-input" *ngIf="editMode" [(ngModel)]="user.email">
+    </div>
+    <div class="detail-item">
+      <label>Name:</label>
+      <span *ngIf="!editMode">{{ user.name }}</span>
+      <input type="text" class="edit-input" *ngIf="editMode" [(ngModel)]="user.name">
+    </div>
+    <div class="detail-item">
+      <label>Last Name:</label>
+      <span *ngIf="!editMode">{{ user.lastName }}</span>
+      <input type="text" class="edit-input" *ngIf="editMode" [(ngModel)]="user.lastName">
+    </div>
+    <div class="detail-item">
+      <label>Type:</label>
+      <span *ngIf="!editMode">{{ user.type }}</span>
+      <input type="text" class="edit-input" *ngIf="editMode" [(ngModel)]="user.type">
+    </div>
+    <div class="detail-item">
+      <label>Status:</label>
+      <span *ngIf="!editMode">{{ user.status }}</span>
+      <input type="text" class="edit-input" *ngIf="editMode" [(ngModel)]="user.status">
+    </div>
+    <div class="detail-item">
+      <label>Security Question:</label>
+      <span *ngIf="!editMode">{{ user.securityQuestion }}</span>
+      <input type="text" class="edit-input" *ngIf="editMode" [(ngModel)]="user.securityQuestion">
+    </div>
+    <div class="detail-item">
+      <label>Security Answer:</label>
+      <span *ngIf="!editMode">{{ user.securityAnswer }}</span>
+      <input type="text" class="edit-input" *ngIf="editMode" [(ngModel)]="user.securityAnswer">
+    </div>
+    <div class="detail-item">
+      <label>Gender:</label>
+      <span *ngIf="!editMode">{{ user.gender }}</span>
+      <input type="text" class="edit-input" *ngIf="editMode" [(ngModel)]="user.gender">
+    </div>
+    <div class="detail-item">
+      <label>Address:</label>
+      <span *ngIf="!editMode">{{ user.address }}</span>
+      <input type="text" class="edit-input" *ngIf="editMode" [(ngModel)]="user.address">
+    </div>
+    <div class="detail-item">
+      <label>Phone Number:</label>
+      <span *ngIf="!editMode">{{ user.phoneNumber }}</span>
+      <input type="text" class="edit-input" *ngIf="editMode" [(ngModel)]="user.phoneNumber">
+    </div>
+    <div class="detail-item">
+      <label>Card Number:</label>
+      <span *ngIf="!editMode">{{ user.cardNumber }}</span>
+      <input type="text" class="edit-input" *ngIf="editMode" [(ngModel)]="user.cardNumber">
+    </div>
+    <div *ngIf="isWaiter()" class="detail-item">
+      <label>Restaurant id:</label>
+      <span *ngIf="!editMode">{{ user.idRes }}</span>
+      <input type="text" class="edit-input" *ngIf="editMode" [(ngModel)]="user.idRes">
+    </div>
+    <div class="detail-item" *ngIf="editMode">
+      <label>New Password:</label>
+      <input type="password" class="edit-input" [(ngModel)]="newPassword">
+    </div>
+    <input type="file" id="profilePicture" *ngIf="editMode" (change)="onFileChange($event)" accept="image/jpeg, image/png" required>
+
+  </div>
+  <div class="button-container" *ngIf="!editMode">
+    <button class="edit-button" (click)="toggleEditMode()">Edit</button>
+  </div>
+  <div class="button-container" *ngIf="editMode">
+    <button class="save-button" (click)="saveChanges()">Save</button>
+    <button class="cancel-button" (click)="cancelEdit()">Cancel</button>
+  </div>
+</div>

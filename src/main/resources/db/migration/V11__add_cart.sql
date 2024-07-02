@@ -1,0 +1,1 @@
+alter table "delivery" add column cart varchar(255) null;
