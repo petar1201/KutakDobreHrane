@@ -8,9 +8,12 @@ import com.etf.bg.ac.rs.mp200329.kutakdobrehrane.model.dto.ReservationDto;
 import com.etf.bg.ac.rs.mp200329.kutakdobrehrane.model.dto.ReservationRestaurantDto;
 import com.etf.bg.ac.rs.mp200329.kutakdobrehrane.model.enums.ReservationStatus;
 import com.etf.bg.ac.rs.mp200329.kutakdobrehrane.model.request.CreateReservationRequest;
+import com.etf.bg.ac.rs.mp200329.kutakdobrehrane.model.response.Histogram;
+import com.etf.bg.ac.rs.mp200329.kutakdobrehrane.model.response.Pie;
 import com.etf.bg.ac.rs.mp200329.kutakdobrehrane.model.response.ReservationArchive;
 import com.etf.bg.ac.rs.mp200329.kutakdobrehrane.model.response.ReservationSummary;
 import com.etf.bg.ac.rs.mp200329.kutakdobrehrane.model.restaurant.RestaurantLayout;
+import com.etf.bg.ac.rs.mp200329.kutakdobrehrane.model.restaurant.Table;
 import com.etf.bg.ac.rs.mp200329.kutakdobrehrane.repository.ReservationRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -36,7 +39,7 @@ public class ReservationService {
     private final TableUsageService tableUsageService;
 
 
-    public Reservation createReservation(CreateReservationRequest createReservationRequest) throws UserNotFoundException, RestaurantNotFoundException, JsonProcessingException, RestaurantNotWorkingException, AlreadyBookedException {
+    public Reservation createReservation(CreateReservationRequest createReservationRequest) throws UserNotFoundException, RestaurantNotFoundException, JsonProcessingException, RestaurantNotWorkingException, AlreadyBookedException, NoTableWithNeededCapacityException {
         User guest = userService.findById(createReservationRequest.getIdGuest());
         Restaurant restaurant = restaurantService.findById(createReservationRequest.getIdRestaurant());
         if(guest == null){
@@ -78,6 +81,17 @@ public class ReservationService {
 
         ObjectMapper mapper = new ObjectMapper();
         RestaurantLayout restaurantLayout = mapper.readValue(restaurant.getRestaurantLayout(), RestaurantLayout.class);
+
+        Boolean flag = false;
+        for (Table table : restaurantLayout.getTables()) {
+            if(table.getCapacity() >= createReservationRequest.getNumOfPersons()){
+                flag = true;
+                break;
+            }
+        }
+        if(!flag){
+            throw new NoTableWithNeededCapacityException();
+        }
 
         if(!tableUsageService.isItFree(restaurant, restaurantLayout, createReservationRequest.getNumOfPersons(),date, (long) hh, false).isEmpty()) {
             Reservation reservation = new Reservation();
@@ -155,6 +169,21 @@ public class ReservationService {
         return reservationRepository.findAll();
     }
 
+    public List<Reservation> findAllForWaiter(Long idWaiter){
+        List<Reservation> lista = findAll();
+        List<Reservation> l = new ArrayList<>();
+        lista.forEach(
+                res ->{
+                    if(res.getIdWaiter() != null){
+                    if(res.getIdWaiter().getId().equals(idWaiter)){
+                        l.add(res);
+                    }}
+                }
+
+        );
+        return l;
+    }
+
     public List<Reservation> findAllCreated(){
         return reservationRepository.findAllByStatusEquals(ReservationStatus.CREATED.name());
     }
@@ -190,6 +219,22 @@ public class ReservationService {
             }
         }
 
+        for(Reservation reservation : reservationRepository.findAllByStatusEquals(ReservationStatus.SHOWED_UP.name())){
+            Instant reservationTime = reservation.getDateTime();
+
+            if (reservationTime.isAfter(last24Hours)) {
+                countDay++;
+            }
+
+            if (reservationTime.isAfter(last7Days)) {
+                countWeek++;
+            }
+
+            if (reservationTime.isAfter(lastMonth)) {
+                countMonth++;
+            }
+        }
+
         ReservationSummary reservationSummary =  new ReservationSummary();
         reservationSummary.setLastDay(countDay);
         reservationSummary.setLastWeek(countWeek);
@@ -208,7 +253,7 @@ public class ReservationService {
         List<Reservation> expiredEntityList = reservationRepository.findAllByStatusEquals(ReservationStatus.EXPIRED.name());
 
         List<ReservationRestaurantDto> activeList = new ArrayList<>();
-        List<ReservationDto> expired = new ArrayList<>();
+        List<ReservationRestaurantDto> expired = new ArrayList<>();
         List<ReservationDto> refused = new ArrayList<>();
 
         for(Reservation reservation: activeEntityList){
@@ -222,7 +267,9 @@ public class ReservationService {
                     reservation.getStatus(),
                     reservation.getIdRestaurant().getName(),
                     reservation.getIdRestaurant().getAddress(),
-                    reservation.getNumOfPeople()
+                    reservation.getNumOfPeople(),
+                    reservation.getIdRestaurant().getId(),
+                    reservation.getIdRestaurant().getRestaurantLayout()
             );
             activeList.add(reservationDto);
         }
@@ -238,7 +285,9 @@ public class ReservationService {
                     reservation.getStatus(),
                     reservation.getIdRestaurant().getName(),
                     reservation.getIdRestaurant().getAddress(),
-                    reservation.getNumOfPeople()
+                    reservation.getNumOfPeople(),
+                    reservation.getIdRestaurant().getId(),
+                    reservation.getIdRestaurant().getRestaurantLayout()
             );
 //            activeList.add(reservationDto);
         }
@@ -254,7 +303,9 @@ public class ReservationService {
                     reservation.getStatus(),
                     reservation.getIdRestaurant().getName(),
                     reservation.getIdRestaurant().getAddress(),
-                    reservation.getNumOfPeople()
+                    reservation.getNumOfPeople(),
+                    reservation.getIdRestaurant().getId(),
+                    reservation.getIdRestaurant().getRestaurantLayout()
             );
             activeList.add(reservationDto);
         }
@@ -291,19 +342,23 @@ public class ReservationService {
             if(!reservation.getIdGuest().getId().equals(idGuest)){
                 continue;
             }
-            ReservationDto reservationDto = new ReservationDto(
+            ReservationRestaurantDto reservationDto = new ReservationRestaurantDto(
                     reservation.getId(),
                     LocalDateTime.ofInstant(reservation.getDateTime(), ZoneId.systemDefault()),
                     reservation.getDescription(),
                     reservation.getStatus(),
-                    reservation.getNumOfPeople()
+                    reservation.getIdRestaurant().getName(),
+                    reservation.getIdRestaurant().getAddress(),
+                    reservation.getNumOfPeople(),
+                    reservation.getIdRestaurant().getId(),
+                    reservation.getIdRestaurant().getRestaurantLayout()
             );
             expired.add(reservationDto);
         }
 
 
         sortReservationsWithRestaurantByDate(activeList);
-        sortReservationsByDate(expired);
+        sortReservationsWithRestaurantByDate(expired);
         sortReservationsByDate(refused);
 
         ReservationArchive reservationArchive = new ReservationArchive();
@@ -334,12 +389,200 @@ public class ReservationService {
                     reservation.getStatus(),
                     restaurant.getName(),
                     restaurant.getAddress(),
-                    reservation.getNumOfPeople()
+                    reservation.getNumOfPeople(),
+                    reservation.getIdRestaurant().getId(),
+                    reservation.getIdRestaurant().getRestaurantLayout()
             );
+
             sortReservationsWithRestaurantByDate(reservationDtoList);
             reservationDtoList.add(reservationDto);
         });
         return reservationDtoList;
     }
+
+
+    public List<ReservationRestaurantDto> getAcceptedForWaiter(Long idWaiter){
+        List<ReservationRestaurantDto> activeList = new ArrayList<>();
+        List<Reservation> activeEntityList = reservationRepository.findAllByStatusEquals(ReservationStatus.ACCEPTED.name());
+        for(Reservation reservation: activeEntityList){
+            if(!reservation.getIdWaiter().getId().equals(idWaiter)){
+                continue;
+            }
+            Instant now = Instant.now();
+            if(!now.isAfter(reservation.getDateTime())){
+                continue;
+            }
+            ReservationRestaurantDto reservationDto = new ReservationRestaurantDto(
+                    reservation.getId(),
+                    LocalDateTime.ofInstant(reservation.getDateTime(), ZoneId.systemDefault()),
+                    reservation.getDescription(),
+                    reservation.getStatus(),
+                    reservation.getIdRestaurant().getName(),
+                    reservation.getIdRestaurant().getAddress(),
+                    reservation.getNumOfPeople(),
+                    reservation.getIdRestaurant().getId(),
+                    reservation.getIdRestaurant().getRestaurantLayout()
+            );
+            activeList.add(reservationDto);
+        }
+        return activeList;
+    }
+
+
+
+    public Histogram getHistogram(){
+        Histogram histogram = new Histogram();
+        histogram.setMon(0L);
+        histogram.setTue(0L);
+        histogram.setWed(0L);
+        histogram.setThu(0L);
+        histogram.setFri(0L);
+        histogram.setSat(0L);
+        histogram.setSun(0L);
+
+
+        Instant twoYearsAgo = Instant.now().minus(355*2, ChronoUnit.DAYS);
+
+        findAll().forEach(
+                res->{
+                    if(res.getDateTime().isAfter(twoYearsAgo)){
+                        switch (LocalDateTime.ofInstant(res.getDateTime(), ZoneId.systemDefault()).getDayOfWeek()){
+                            case MONDAY -> {
+                                histogram.setMon(histogram.getMon()+1);
+                                break;
+                            }
+                            case TUESDAY -> {
+                                histogram.setTue(histogram.getTue()+1);
+                                break;
+                            }
+                            case WEDNESDAY -> {
+                                histogram.setWed(histogram.getWed()+1);
+                                break;
+                            }
+                            case THURSDAY -> {
+                                histogram.setThu(histogram.getThu()+1);
+                                break;
+                            }
+                            case FRIDAY -> {
+                                histogram.setFri(histogram.getFri()+1);
+                                break;
+                            }
+                            case SATURDAY -> {
+                                histogram.setSat(histogram.getSat()+1);
+                                break;
+                            }
+                            case SUNDAY -> {
+                                histogram.setSun(histogram.getSun()+1);
+                                break;
+                            }
+                        }
+                    }
+                }
+        );
+
+        return histogram;
+    }
+
+
+    public List<Pie> guestPerWaiter(List<Long> ids){
+        Instant now = Instant.now();
+        Instant lastMonth = now.minus(30, ChronoUnit.DAYS);
+
+        HashMap<Long, Long> mapa = new HashMap<>();
+
+        ids.forEach(
+                id->{
+                    mapa.put(id, 0L);
+                }
+        );
+
+        for(Reservation reservation : reservationRepository.findAllByStatusEquals(ReservationStatus.ACCEPTED.name())){
+            Instant reservationTime = reservation.getDateTime();
+            if(!ids.contains(reservation.getIdWaiter().getId())){
+                continue;
+            }
+            if (reservationTime.isAfter(lastMonth)) {
+                mapa.put(reservation.getIdWaiter().getId(), mapa.get(reservation.getIdWaiter().getId())+reservation.getNumOfPeople());
+            }
+        }
+
+        for(Reservation reservation : reservationRepository.findAllByStatusEquals(ReservationStatus.SHOWED_UP.name())){
+            Instant reservationTime = reservation.getDateTime();
+            if(!ids.contains(reservation.getIdWaiter().getId())){
+                continue;
+            }
+            if (reservationTime.isAfter(lastMonth)) {
+                mapa.put(reservation.getIdWaiter().getId(), mapa.get(reservation.getIdWaiter().getId())+reservation.getNumOfPeople());
+            }
+        }
+
+        HashMap<String, Long> endMap = new HashMap<>();
+
+        List<Pie> lista = new ArrayList<>();
+
+        for(Long key: mapa.keySet()){
+            Pie p = new Pie();
+            p.setName(userService.findById(key).getName());
+            p.setNum(mapa.get(key));
+            lista.add(p);
+        }
+
+        return lista;
+    }
+
+
+    public Histogram gett(Long idWaiter){
+        Histogram histogram = new Histogram();
+        histogram.setMon(0L);
+        histogram.setTue(0L);
+        histogram.setWed(0L);
+        histogram.setThu(0L);
+        histogram.setFri(0L);
+        histogram.setSat(0L);
+        histogram.setSun(0L);
+
+
+        Instant twoYearsAgo = Instant.now().minus(30, ChronoUnit.DAYS);
+
+        findAllForWaiter(idWaiter).forEach(
+                res->{
+                    if(res.getDateTime().isAfter(twoYearsAgo)){
+                        switch (LocalDateTime.ofInstant(res.getDateTime(), ZoneId.systemDefault()).getDayOfWeek()){
+                            case MONDAY -> {
+                                histogram.setMon(histogram.getMon()+1);
+                                break;
+                            }
+                            case TUESDAY -> {
+                                histogram.setTue(histogram.getTue()+1);
+                                break;
+                            }
+                            case WEDNESDAY -> {
+                                histogram.setWed(histogram.getWed()+1);
+                                break;
+                            }
+                            case THURSDAY -> {
+                                histogram.setThu(histogram.getThu()+1);
+                                break;
+                            }
+                            case FRIDAY -> {
+                                histogram.setFri(histogram.getFri()+1);
+                                break;
+                            }
+                            case SATURDAY -> {
+                                histogram.setSat(histogram.getSat()+1);
+                                break;
+                            }
+                            case SUNDAY -> {
+                                histogram.setSun(histogram.getSun()+1);
+                                break;
+                            }
+                        }
+                    }
+                }
+        );
+
+        return histogram;
+    }
+
 
 }

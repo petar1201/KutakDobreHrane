@@ -4,6 +4,8 @@ export class ReservationDto{
     status: String
     restaurantName: String
     restaurantAddress: String
-    numOfPeopple: Number
+    numOfPeople: Number
     dateTime: string
+    idRes: Number
+    restaurantLayout: String
 }

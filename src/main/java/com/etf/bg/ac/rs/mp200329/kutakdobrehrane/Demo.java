@@ -42,7 +42,7 @@ public class Demo {
     public void scheduledCheckForExpiry(){
         Instant now = Instant.now();
         for(Reservation reservation: reservationService.findAllCreated()){
-            if(reservation.getDateTime().isAfter(now)){
+            if(now.isAfter(reservation.getDateTime())){
                 try {
                     reservationService.expiredReservation(reservation.getId());
                 } catch (Exception e) {

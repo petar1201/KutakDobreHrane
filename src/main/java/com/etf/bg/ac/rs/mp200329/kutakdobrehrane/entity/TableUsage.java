@@ -34,4 +34,7 @@ public class TableUsage {
     @Column(name = "datum", nullable = false)
     private Date datum;
 
+    @Column(name = "start_minute", nullable = false)
+    private Long startMinute;
+
 }

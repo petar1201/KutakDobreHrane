@@ -11,7 +11,7 @@ import java.util.List;
 public class ReservationArchive {
 
     private List<ReservationRestaurantDto> active;//active showed up created
-    private List<ReservationDto> expired;// expired
+    private List<ReservationRestaurantDto> expired;// expired
     private List<ReservationDto> refused;//declined didnt showup
 
 }

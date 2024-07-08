@@ -12,6 +12,8 @@
             <th>Date</th>
             <th>Restaurant Name</th>
             <th>Restaurant Address</th>
+            <th>Status</th>
+
           </tr>
         </thead>
         <tbody>
@@ -19,9 +21,11 @@
             <td>{{ formatDate(reservation.dateTime) }}</td>
             <td>{{ reservation.restaurantName }}</td>
             <td>{{ reservation.restaurantAddress }}</td>
+            <td>{{ reservation.status }}</td>
+
           </tr>
           <tr *ngIf="!archive.active || archive.active.length === 0">
-            <td colspan="3" class="no-data">No active reservations found.</td>
+            <td colspan="4" class="no-data">No active reservations found.</td>
           </tr>
         </tbody>
       </table>
@@ -38,8 +42,8 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let reservation of archive.expired">
-            <td>&nbsp;</td>
+          <tr *ngFor="let reservation of expired">
+            <td>{{formatDate(reservation.dateTime)}}</td>
             <td>{{ reservation.restaurantName }}</td>
             <td>{{ reservation.restaurantAddress }}</td>
           </tr>

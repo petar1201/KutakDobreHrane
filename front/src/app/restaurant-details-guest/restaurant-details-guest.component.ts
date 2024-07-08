@@ -72,6 +72,9 @@ export class RestaurantDetailsGuestComponent implements OnInit{
         case 304:
           this.reservationMessage = "Table already booked"
           break;
+        case 305:
+            this.reservationMessage = "No table with that capacity"
+            break;
         default:
           this.reservationMessage = "Default error"
     }
@@ -203,6 +206,12 @@ export class RestaurantDetailsGuestComponent implements OnInit{
       }
     )
     // Empty the cart after finishing
+
+    
+  }
+
+  gett(){
+    return JSON.parse(this.restaurant.restaurantLayout as string)
   }
 
 }

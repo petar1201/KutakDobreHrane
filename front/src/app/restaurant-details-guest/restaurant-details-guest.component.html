@@ -27,7 +27,12 @@
       <span *ngIf="!editMode">{{ restaurant.workingHours }}</span>
       <input type="text" class="edit-input" *ngIf="editMode" [(ngModel)]="restaurant.workingHours">
     </div>
+    <div style="text-align: center;">
+      <app-restaurant-layout [layoutData]="gett()"></app-restaurant-layout>
+    </div>
+
   </div>
+  
 
   <div class="reservation-form" *ngIf="!editMode">
     <!-- Your existing reservation form -->

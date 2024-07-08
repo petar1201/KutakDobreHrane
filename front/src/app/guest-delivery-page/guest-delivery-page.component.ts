@@ -40,7 +40,9 @@ constructor(
 
   formatDateTime(dateTime: string): string {
     // Add your date formatting logic here
-    return new Date(dateTime).toLocaleString();
+    let datee = new Date(dateTime)
+    datee.setHours(datee.getHours()-2)
+    return datee.toLocaleString();
   }
 
   isThereAnyActive(): boolean{

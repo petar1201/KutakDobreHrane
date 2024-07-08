@@ -28,6 +28,12 @@ import { DeliveryTimeDialogComponent } from './delivery-time-dialog/delivery-tim
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatRadioModule } from '@angular/material/radio';
+import { RestaurantLayoutComponent } from './restaurant-layout/restaurant-layout.component';
+import { ReservationDetailsComponent } from './reservation-details/reservation-details.component';
+import { BarChartComponent } from './bar-chart/bar-chart.component';
+import { NgChartsModule } from 'ng2-charts';
+import { PieChartComponent } from './pie-chart/pie-chart.component';
+import { PrviBarComponent } from './prvi-bar/prvi-bar.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -50,6 +56,11 @@ import { MatRadioModule } from '@angular/material/radio';
     WaiterReservationPageComponent,
     WaiterStatisticsPageComponent,
     DeliveryTimeDialogComponent,
+    RestaurantLayoutComponent,
+    ReservationDetailsComponent,
+    BarChartComponent,
+    PieChartComponent,
+    PrviBarComponent,
   ],
   imports: [
     BrowserModule,
@@ -60,6 +71,7 @@ import { MatRadioModule } from '@angular/material/radio';
     MatDialogModule,
     MatButtonModule,
     MatRadioModule,
+    NgChartsModule
   ],
   bootstrap: [AppComponent]
 })

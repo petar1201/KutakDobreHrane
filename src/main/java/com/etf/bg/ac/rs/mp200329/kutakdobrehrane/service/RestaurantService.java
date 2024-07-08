@@ -87,9 +87,11 @@ public class RestaurantService {
             RestaurantsDTO restaurantsDTO = new RestaurantsDTO();
             restaurantsDTO.setAddress(restaurant.getAddress());
             restaurantsDTO.setName(restaurant.getName());
+            restaurantsDTO.setContactPerson(restaurant.getContactPerson());
             restaurantsDTO.setWorkingHours(restaurant.getWorkingHours());
             restaurantsDTO.setType(restaurant.getType());
             restaurantsDTO.setId(restaurant.getId());
+            restaurantsDTO.setRestaurantLayout(restaurant.getRestaurantLayout());
             StringBuilder waiters = new StringBuilder();
             for (WaiterRestaurant waiterRestaurant: waiterRestaurantList){
                 if(Objects.equals(waiterRestaurant.getId().getRestaurantId(), restaurant.getId())){
@@ -110,5 +112,8 @@ public class RestaurantService {
     public long countAll(){
         return restaurantRepository.count();
     }
+
+
+
 
 }

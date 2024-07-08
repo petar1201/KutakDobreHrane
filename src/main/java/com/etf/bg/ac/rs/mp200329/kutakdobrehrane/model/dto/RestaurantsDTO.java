@@ -11,5 +11,7 @@ public class RestaurantsDTO {
     private String type;
     private String waiters;
     private Long id;
+    private String contactPerson;
+    private String restaurantLayout;
 
 }

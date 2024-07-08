@@ -66,4 +66,5 @@ public class RestaurantController {
         return restaurantService.countAll();
     }
 
+
 }

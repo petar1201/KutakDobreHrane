@@ -42,8 +42,13 @@ export class RestaurantDetailsAdminComponent implements OnInit{
 
   ngOnInit(): void {
     this.restaurant = JSON.parse(localStorage.getItem("res_details"));
+    console.log(this.restaurant)
     // Optional: Make a copy of user object to track changes locally before saving
     // this.editedUser = { ...this.user };
+  }
+
+  gett(){
+    return JSON.parse(this.restaurant.restaurantLayout as string)
   }
 
   toggleEditMode(): void {
@@ -65,6 +70,7 @@ export class RestaurantDetailsAdminComponent implements OnInit{
       response => {
         localStorage.setItem("res_details", JSON.stringify(response))
         this.restaurant = response as Restaurant
+        this.ngOnInit()
       }
     )
     this.editMode = false;

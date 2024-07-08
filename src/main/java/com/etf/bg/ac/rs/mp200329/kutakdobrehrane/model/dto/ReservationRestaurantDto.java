@@ -1,5 +1,6 @@
 package com.etf.bg.ac.rs.mp200329.kutakdobrehrane.model.dto;
 
+import lombok.Setter;
 import lombok.Value;
 
 import java.io.Serializable;
@@ -15,4 +16,6 @@ public class ReservationRestaurantDto implements Serializable {
     String restaurantName;
     String restaurantAddress;
     Long numOfPeople;
+    Long idRes;
+    String restaurantLayout ;
 }

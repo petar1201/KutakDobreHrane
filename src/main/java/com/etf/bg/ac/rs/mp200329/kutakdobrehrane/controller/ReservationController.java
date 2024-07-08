@@ -1,16 +1,17 @@
 package com.etf.bg.ac.rs.mp200329.kutakdobrehrane.controller;
 
 import com.etf.bg.ac.rs.mp200329.kutakdobrehrane.entity.Reservation;
+import com.etf.bg.ac.rs.mp200329.kutakdobrehrane.entity.User;
 import com.etf.bg.ac.rs.mp200329.kutakdobrehrane.exception.*;
 import com.etf.bg.ac.rs.mp200329.kutakdobrehrane.model.dto.ReservationDto;
 import com.etf.bg.ac.rs.mp200329.kutakdobrehrane.model.dto.ReservationRestaurantDto;
 import com.etf.bg.ac.rs.mp200329.kutakdobrehrane.model.request.CreateReservationRequest;
 import com.etf.bg.ac.rs.mp200329.kutakdobrehrane.model.request.DeclineReservationRequest;
+import com.etf.bg.ac.rs.mp200329.kutakdobrehrane.model.response.Histogram;
+import com.etf.bg.ac.rs.mp200329.kutakdobrehrane.model.response.Pie;
 import com.etf.bg.ac.rs.mp200329.kutakdobrehrane.model.response.ReservationArchive;
 import com.etf.bg.ac.rs.mp200329.kutakdobrehrane.model.response.ReservationSummary;
-import com.etf.bg.ac.rs.mp200329.kutakdobrehrane.service.ReservationService;
-import com.etf.bg.ac.rs.mp200329.kutakdobrehrane.service.RestaurantService;
-import com.etf.bg.ac.rs.mp200329.kutakdobrehrane.service.TableUsageService;
+import com.etf.bg.ac.rs.mp200329.kutakdobrehrane.service.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatusCode;
@@ -30,6 +31,8 @@ public class ReservationController {
     private final TableUsageService tableUsageService;
     private final ReservationService reservationService;
     private final RestaurantService restaurantService;
+    private final UserService userService;
+    private final WaiterRestaurantService waiterRestaurantService;
 
     @PostMapping("/create")
     public ResponseEntity<ReservationDto> createReservation(
@@ -53,16 +56,20 @@ public class ReservationController {
             return new ResponseEntity<>(HttpStatusCode.valueOf(303));
         }  catch (AlreadyBookedException e) {
             return new ResponseEntity<>(HttpStatusCode.valueOf(304));
-        }catch (JsonProcessingException e) {
+        }
+        catch (NoTableWithNeededCapacityException e) {
             return new ResponseEntity<>(HttpStatusCode.valueOf(305));
-        }catch (Exception e){
+        }
+        catch (JsonProcessingException e) {
             return new ResponseEntity<>(HttpStatusCode.valueOf(306));
+        }catch (Exception e){
+            return new ResponseEntity<>(HttpStatusCode.valueOf(307));
         }
     }
 
 
     @GetMapping("/accept/{idRes}/{idWaiter}/{tableNum}")
-    public ResponseEntity<ReservationDto> acceptReservation(
+    public ResponseEntity<ReservationRestaurantDto> acceptReservation(
             @PathVariable Long idRes,
             @PathVariable Long idWaiter,
             @PathVariable Long tableNum
@@ -70,12 +77,16 @@ public class ReservationController {
             ){
         try {
             Reservation reservation = reservationService.acceptReservation(idRes, idWaiter, tableNum);
-            ReservationDto reservationDto = new ReservationDto(
+            ReservationRestaurantDto reservationDto = new ReservationRestaurantDto(
                     reservation.getId(),
                     LocalDateTime.ofInstant(reservation.getDateTime(), ZoneId.systemDefault()),
                     reservation.getDescription(),
                     reservation.getStatus(),
-                    reservation.getNumOfPeople()
+                    reservation.getIdRestaurant().getName(),
+                    reservation.getIdRestaurant().getAddress(),
+                    reservation.getNumOfPeople(),
+                    reservation.getIdRestaurant().getId(),
+                    reservation.getIdRestaurant().getRestaurantLayout()
             );
             return new ResponseEntity<>(reservationDto, HttpStatusCode.valueOf(200));
         } catch (UserNotFoundException e) {
@@ -89,7 +100,7 @@ public class ReservationController {
     }
 
     @PostMapping("/decline")
-    public ResponseEntity<ReservationDto> declineReservation(
+    public ResponseEntity<ReservationRestaurantDto> declineReservation(
             @RequestBody DeclineReservationRequest declineReservationRequest
             ){
         try{
@@ -98,12 +109,16 @@ public class ReservationController {
                     declineReservationRequest.getIdWaiter(),
                     declineReservationRequest.getDescription()
                     );
-            ReservationDto reservationDto = new ReservationDto(
+            ReservationRestaurantDto reservationDto = new ReservationRestaurantDto(
                     reservation.getId(),
                     LocalDateTime.ofInstant(reservation.getDateTime(), ZoneId.systemDefault()),
                     reservation.getDescription(),
                     reservation.getStatus(),
-                    reservation.getNumOfPeople()
+                    reservation.getIdRestaurant().getName(),
+                    reservation.getIdRestaurant().getAddress(),
+                    reservation.getNumOfPeople(),
+                    reservation.getIdRestaurant().getId(),
+                    reservation.getIdRestaurant().getRestaurantLayout()
             );
             return new ResponseEntity<>(reservationDto, HttpStatusCode.valueOf(200));
         } catch (UserNotFoundException e) {
@@ -202,5 +217,32 @@ public class ReservationController {
         return reservationService.findCreatedForRestaurant(restaurantService.findById(idRes));
     }
 
+    @GetMapping("/accepted/waiter/{idWaiter}")
+    public List<ReservationRestaurantDto> getAcceptedForWaiter(
+            @PathVariable Long idWaiter){
+        return reservationService.getAcceptedForWaiter(idWaiter);
+    }
+
+
+    @GetMapping("histogram")
+    public Histogram histogram(){
+        return reservationService.getHistogram();
+    }
+    @GetMapping("bar/{idWaiter}")
+    public Histogram bar(
+            @PathVariable Long idWaiter
+    ){
+        return reservationService.gett(idWaiter);
+    }
+
+    @GetMapping("pie/{idUser}")
+    public List<Pie> mapa(@PathVariable Long idUser){
+
+        try {
+            return reservationService.guestPerWaiter(waiterRestaurantService.getWaitersIds(waiterRestaurantService.getByUser(userService.findById(idUser))));
+        } catch (UserNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 }

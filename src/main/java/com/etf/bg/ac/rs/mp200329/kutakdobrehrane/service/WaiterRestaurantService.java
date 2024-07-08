@@ -10,6 +10,7 @@ import com.etf.bg.ac.rs.mp200329.kutakdobrehrane.repository.WaiterRestaurantRepo
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -60,6 +61,20 @@ public class WaiterRestaurantService {
 
     public List<WaiterRestaurant> getAll(){
         return waiterRestaurantRepository.findAll();
+    }
+
+
+    public List<Long> getWaitersIds(Long idRes){
+        List<Long> lista = new ArrayList<>();
+
+        for(WaiterRestaurant waiterRestaurant: getAll()){
+            if(!waiterRestaurant.getRestaurant().getId().equals(idRes)){
+                continue;
+            }
+            lista.add(waiterRestaurant.getUser().getId());
+        }
+
+        return lista;
     }
 
 }

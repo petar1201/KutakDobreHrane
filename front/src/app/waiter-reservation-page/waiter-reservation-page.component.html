@@ -11,16 +11,59 @@
             <th>Restaurant Name</th>
             <th>Date</th>
             <th>Persons</th>
+            <th>More</th>
+
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let reservation of reservations">
             <td>{{ reservation.restaurantName }}</td>
             <td>{{ formatDate(reservation.dateTime) }}</td>
-            <td>{{ reservation.numOfPeopple }}</td>
+            <td>{{ reservation.numOfPeople }}</td>
+            <td style="text-align: center;" (click)="moreFun(reservation)"><button class="finish-button">See More</button></td>
+
           </tr>
+          
           <tr *ngIf="reservations.length === 0">
-            <td colspan="3" class="no-data">No reservations found.</td>
+            <td colspan="4" class="no-data">No reservations found.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  
+  
+  </div>
+
+  <div class="guest-reservations-container">
+  
+    <h2>Acceptance</h2>
+  
+    <div class="reservation-section">
+      <h3>Accepted Reservations</h3>
+      <table class="reservation-table">
+        <thead>
+          <tr>
+            <th>Restaurant Name</th>
+            <th>Date</th>
+            <th>Persons</th>
+            <th>Confirm Showed</th>
+            <th>Confirm Not Showed</th>
+
+
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let reservation of accepted">
+            <td>{{ reservation.restaurantName }}</td>
+            <td>{{ formatDate(reservation.dateTime) }}</td>
+            <td>{{ reservation.numOfPeople }}</td>
+            <td style="text-align: center;" (click)="confirm(reservation)"><button class="finish-button">Confirm Showed</button></td>
+            <td style="text-align: center;" (click)="falseConfirm(reservation)"><button class="finish-button">Confirm not Showed</button></td>
+
+          </tr>
+          
+          <tr *ngIf="accepted.length === 0">
+            <td colspan="5" class="no-data">No reservations found.</td>
           </tr>
         </tbody>
       </table>

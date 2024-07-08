@@ -1,0 +1,37 @@
+<div class="user-details-container">
+    <button class="back-button" (click)="goBack()">Go Back</button>
+    <h2 class="details-header">Reservation Details</h2>
+    <div class="user-details">
+      <div class="detail-item">
+        <label>Name:</label>
+        <span>{{ reservation.restaurantName }}</span>
+      </div>
+      <div class="detail-item">
+        <label>Date:</label>
+        <span>{{ formatDate(reservation.dateTime) }}</span>
+      </div>
+      <div class="detail-item">
+        <label>Num of People:</label>
+        <span>{{ reservation.numOfPeople }}</span>
+      </div>
+      <div *ngIf="show()" style="text-align: center;">
+        <app-restaurant-layout [layoutData]="gett()" [redArray]="getIndexArrayOfColoredTables()"></app-restaurant-layout>
+      </div>
+    </div>
+    <div *ngIf="isThereAnyAvailable() && isCreated()" class="button-container">
+      <button (click)="accept()" class="edit-button" >Accept</button>
+      <select [(ngModel)]="selectedTable" name="tsable">
+        <option *ngFor="let table of getObjectArrayOfAvailableTables()" [ngValue]="table.num">
+          {{ table.num-1}} (Capacity: {{ table.cap }})
+        </option>
+      </select>
+      
+    </div>
+    <div *ngIf="isCreated()" class="button-container">
+      <button (click)="refuse()" class="save-button">Reject</button>
+    </div>
+    <div *ngIf="isCreated()" class="button-container">
+      <textarea type="text-area" name="reason" id="reason" [(ngModel)]="description"></textarea>
+    </div>
+
+  </div>

@@ -39,7 +39,7 @@
       </div>
       <div class="detail-item">
         <label>Restaurant Layout:</label>
-        <span *ngIf="!editMode">{{ restaurant.restaurantLayout }}</span>
+        <app-restaurant-layout [layoutData]="gett()"></app-restaurant-layout>
         <input type="text" class="edit-input" *ngIf="editMode" [(ngModel)]="restaurant.restaurantLayout">
       </div>
     </div>

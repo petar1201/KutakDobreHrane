@@ -43,10 +43,13 @@ public class TableUsageService {
                     && datee.getYear() == tu.getDatum().toLocalDate().getYear()
                      && datee.getDayOfYear() == tu.getDatum().toLocalDate().getDayOfYear()
                       &&(
-                        (start < tu.getStartHour() && start + 3 >= tu.getStartHour()) ||
-                        (start > tu.getStartHour() && start <= tu.getStartHour() + 3) ||
-                        (start.equals(tu.getStartHour()))
+                        (start < tu.getStartHour() && start + 3 > tu.getStartHour() ) ||
+                         (start < tu.getStartHour() && start + 3 == tu.getStartHour() && datee.getMinute() >= tu.getStartMinute()) ||
+                         (start > tu.getStartHour() && start < tu.getStartHour() + 3) ||
+                         (start > tu.getStartHour() && start == tu.getStartHour() + 3 && datee.getMinute() <= tu.getStartMinute()) ||
+                         (start.equals(tu.getStartHour()))
                         )
+
                 ){
                     flag = false;
                     break;
@@ -80,6 +83,7 @@ public class TableUsageService {
         tableUsage.setIdRestaurant(restaurant);
         tableUsage.setStartHour(startHOur);
         tableUsage.setDatum(Date.valueOf(datum.toLocalDate()));
+        tableUsage.setStartMinute((long)datum.getMinute());
         return tableUsageRepository.save(tableUsage);
     }
 

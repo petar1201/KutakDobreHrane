@@ -15,6 +15,8 @@ import { WaiterProfilePageComponent } from './waiter-profile-page/waiter-profile
 import { WaiterDeliveryPageComponent } from './waiter-delivery-page/waiter-delivery-page.component';
 import { WaiterReservationPageComponent } from './waiter-reservation-page/waiter-reservation-page.component';
 import { WaiterStatisticsPageComponent } from './waiter-statistics-page/waiter-statistics-page.component';
+import { RestaurantLayoutComponent } from './restaurant-layout/restaurant-layout.component';
+import { ReservationDetailsComponent } from './reservation-details/reservation-details.component';
 
 
 const routes: Routes = [
@@ -32,7 +34,8 @@ const routes: Routes = [
   { path: "waiter/profile", component:WaiterProfilePageComponent},
   { path: "waiter/delivery", component:WaiterDeliveryPageComponent},
   { path: "waiter/reservations", component:WaiterReservationPageComponent},
-  { path: "waiter/stats", component: WaiterStatisticsPageComponent}
+  { path: "waiter/stats", component: WaiterStatisticsPageComponent},
+  { path: "reservation", component: ReservationDetailsComponent}
 
 
 ];

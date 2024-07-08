@@ -1,0 +1,1 @@
+alter table "table_usage" add column "start_minute" int;
